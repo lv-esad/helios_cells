@@ -11,6 +11,7 @@ int inputFrenquency = 100;
 PImage plan;
 
 ArrayList<Position> positions = new ArrayList<Position>();
+ArrayList<Croisement> croisements = new ArrayList<Croisement>();
 
 void setup(){
   
@@ -21,7 +22,7 @@ void setup(){
 }
 
 void mousePressed(){
-  randomColor = color(random(255),random(255),random(255));
+  randomColor = color(random(128)+128,random(128)+128,random(128)+128);
   userIndex ++;
 }
 
@@ -60,10 +61,23 @@ void draw(){
     }
 
   }
-  
+  noStroke();
   for(Position p : positions){
-    fill(p.couleur,40);
+    fill(p.couleur,80);
     rect(p.x*GRID_SIZE,p.y*GRID_SIZE,GRID_SIZE,GRID_SIZE);
+  }
+  
+  croisements = new ArrayList<Croisement>();
+  
+  for(Position p1: positions){
+    for(Position p2: positions){
+      if(p1.user != p2.user && p1.match(p2)){
+        croisements.add(new Croisement(p1,p2));
+        noFill();
+        stroke(p1.invertColor,40);
+        rect(p1.x*GRID_SIZE,p1.y*GRID_SIZE,GRID_SIZE,GRID_SIZE);
+      }
+    }
   }
   
   
