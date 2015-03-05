@@ -8,6 +8,8 @@ class Position{
   color couleur;
   color invertColor;
   
+  boolean dejaCroise = false;
+  
   Position(int xGrid, int yGrid, color c, int i, int d){
     x = xGrid;
     y = yGrid;

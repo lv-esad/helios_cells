@@ -62,23 +62,34 @@ void draw(){
 
   }
   noStroke();
+  
   for(Position p : positions){
     fill(p.couleur,80);
     rect(p.x*GRID_SIZE,p.y*GRID_SIZE,GRID_SIZE,GRID_SIZE);
   }
   
-  croisements = new ArrayList<Croisement>();
   
   for(Position p1: positions){
-    for(Position p2: positions){
-      if(p1.user != p2.user && p1.match(p2)){
-        croisements.add(new Croisement(p1,p2));
-        noFill();
-        stroke(p1.invertColor,40);
-        rect(p1.x*GRID_SIZE,p1.y*GRID_SIZE,GRID_SIZE,GRID_SIZE);
+    if(!p1.dejaCroise){
+        for(Position p2: positions){
+         if(!p2.dejaCroise){
+           if(p1.user != p2.user && p1.match(p2)){
+              croisements.add(new Croisement(p1,p2));
+              p1.dejaCroise = p2.dejaCroise = true;
+           }
+        }
       }
     }
   }
+  
+  noFill();
+  strokeWeight(2);
+  for(Croisement c : croisements){
+    stroke(c.p1.invertColor,100);
+    rect(c.p1.x*GRID_SIZE,c.p1.y*GRID_SIZE,GRID_SIZE,GRID_SIZE);
+  }
+  
+  println(croisements.size());
   
   
 }
