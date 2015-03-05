@@ -27,7 +27,7 @@ void mousePressed(){
 }
 
 void draw(){
-  
+  boolean displayColor = true;
   // dessine la grille
   background(255);
   image(plan,0,0,width,height);
@@ -38,6 +38,11 @@ void draw(){
   }
   for(int j=0; j<=height; j+=GRID_SIZE){
     line(0,j,width,j);
+  }
+  
+  if(keyPressed && key == 'w'){
+  displayColor = false ;
+  
   }
   
   // ajout d'une position, si la souris est appuyee
@@ -61,13 +66,15 @@ void draw(){
     }
 
   }
+
   noStroke();
   
+  if(displayColor){
   for(Position p : positions){
     fill(p.couleur,80);
     rect(p.x*GRID_SIZE,p.y*GRID_SIZE,GRID_SIZE,GRID_SIZE);
   }
-  
+  }
   
   for(Position p1: positions){
     if(!p1.dejaCroise){
@@ -90,6 +97,6 @@ void draw(){
   }
   
   println(croisements.size());
-  
+
   
 }
