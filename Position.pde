@@ -23,4 +23,13 @@ class Position {
     return  x == testPosition.x && y == testPosition.y;
     
   }
+  public JSONObject getJSON(){
+    JSONObject json = new JSONObject();
+    json.setInt("x",x);
+    json.setInt("y",y);
+    json.setInt("date",date);
+    json.setInt("user",user);
+    json.setInt("color",couleur);
+    return json;
+  }
 }

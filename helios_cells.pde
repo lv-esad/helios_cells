@@ -27,6 +27,8 @@ void mousePressed(){
 }
 
 void draw(){
+  
+  
   boolean displayColor = true;
   // dessine la grille
   background(255);
@@ -88,15 +90,38 @@ void draw(){
       }
     }
   }
+
   
   noFill();
   strokeWeight(2);
+  
+  
   for(Croisement c : croisements){
     stroke(c.p1.invertColor,100);
     rect(c.p1.x*GRID_SIZE,c.p1.y*GRID_SIZE,GRID_SIZE,GRID_SIZE);
   }
   
   println(croisements.size());
+  
+  if(keyPressed && key=='s'){
+    // positons
+      JSONArray jsonPositions = new JSONArray();
+      int n=0;
+      for(Position p : positions){
+        jsonPositions.setJSONObject(n,p.getJSON());
+        n++;
+      }
+      saveJSONArray(jsonPositions, "data/positions.json");
+      
+     // croisements
+     JSONArray jsonCroisements = new JSONArray();
+      n=0;
+      for(Croisement c : croisements){
+        jsonCroisements.setJSONArray(n,c.getJSON());
+        n++;
+      }
+      saveJSONArray(jsonCroisements, "data/croisements.json");
+  }
 
   
 }
