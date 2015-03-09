@@ -28,7 +28,11 @@ void mousePressed(){
 
 void draw(){
   
-  
+  if(keyPressed && key == 'p'){
+  saveFrame("rencontre-######.png");
+  }
+      
+      
   boolean displayColor = true;
   // dessine la grille
   background(255);
