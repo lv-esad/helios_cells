@@ -3,8 +3,13 @@
 
 import hypermedia.net.*;
 UDP udps; 
+int CroisementDate ;
+int CroisementUser;
+int CroisementPosX;
+int CroisementPosY;
 
 class udp {
+
   
 JSONObject json;
 JSONArray values;
@@ -26,5 +31,7 @@ json = loadJSONObject ("data//croisements.json"); // unexpected token:json ???
   
  String ip       = "127.0.0.1";  // the remote IP address
  int port        = 6201;    // the destination port
- udps.send(CroisementPosX +  CroisementPosY , ip, port); // bug
-}
+ udps.send("CroisementPosX +  CroisementPosY" , ip, port); // bug
+
+  }
+
