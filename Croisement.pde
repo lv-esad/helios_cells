@@ -1,3 +1,4 @@
+
 class Croisement{
   
   Position p1;
@@ -6,6 +7,7 @@ class Croisement{
   Croisement(Position position1, Position position2){
     p1 = position1;
     p2 = position2;
+
   }
   
   public JSONArray getJSON(){
@@ -14,4 +16,6 @@ class Croisement{
     json.setJSONObject(1,p2.getJSON());
     return json;
   }
+
+ 
 }

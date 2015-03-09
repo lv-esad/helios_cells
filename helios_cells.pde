@@ -1,3 +1,4 @@
+import hypermedia.net.*;
 
 int GRID_SIZE = 7;
 int GRID_X = 160;
@@ -21,7 +22,7 @@ ArrayList<Position> positions = new ArrayList<Position>();
 ArrayList<Croisement> croisements = new ArrayList<Croisement>();
 
 void setup(){
-  
+  udps = new UDP( this, 0 );
   plan = loadImage("plan.png");
   GRID_Y = GRID_X*plan.height/plan.width;
   size(GRID_SIZE*GRID_X+1,GRID_SIZE*GRID_Y+1);
@@ -78,6 +79,7 @@ void draw(){
       lastInputTime = millis();
     }
 
+
   }
 
   noStroke();
@@ -133,6 +135,7 @@ void draw(){
       }
       saveJSONArray(jsonCroisements, "data/croisements.json");
   }
+
 
   
 }
