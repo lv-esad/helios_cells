@@ -7,6 +7,13 @@ int userIndex = 0;
 
 int lastInputTime = 0;
 int inputFrenquency = 100;
+  
+
+int d = day();    
+int m = month();  
+int y = year();     
+int h = hour();  
+int min = minute();
 
 PImage plan;
 
@@ -29,7 +36,7 @@ void mousePressed(){
 void draw(){
   
   if(keyPressed && key == 'p'){
-  saveFrame("rencontre-######.png");
+  saveFrame("Phase-de--rencontre//Helios-rencontre" + d + "-" + m + "-" + y + "-" + "à" + "-" + h + "h"+ min + "min" + ".jpg");
   }
       
       
