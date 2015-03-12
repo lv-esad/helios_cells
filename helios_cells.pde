@@ -13,6 +13,7 @@ PImage plan;
 
 ArrayList<Position> positions = new ArrayList<Position>();
 ArrayList<Croisement> croisements = new ArrayList<Croisement>();
+ArrayList<CroisementSomme> croisementsSomme = new ArrayList<CroisementSomme>();
 
 void setup(){
   plan = loadImage("plan.png");
@@ -90,16 +91,35 @@ void draw(){
       }
     }
   }
+  
+  for(Croisement c: croisements){
+    if(!c.dejaSomme){
+      for(CroisementSomme cs: croisementsSomme){
+        if(cs.x == c.x && cs.y == c.y){
+          cs.add(c);
+        }
+      }
+    }
+    if(!c.dejaSomme){
+      croisementsSomme.add(new CroisementSomme(c));
+    }
+  }
 
   
   noFill();
   strokeWeight(2);
   
   
-  for(Croisement c : croisements){
+  /*for(Croisement c : croisements){
     stroke(c.p1.invertColor,100);
     rect(c.p1.x*GRID_SIZE,c.p1.y*GRID_SIZE,GRID_SIZE,GRID_SIZE);
-  }
+  }*/
+    
+  for(CroisementSomme cs : croisementsSomme){
+    stroke(0);
+    strokeWeight(cs.croisements.size());
+    rect(cs.x*GRID_SIZE,cs.y*GRID_SIZE,GRID_SIZE,GRID_SIZE);
+  }  
     
   if(keyPressed){
     switch(key){
@@ -124,6 +144,15 @@ void draw(){
           n++;
         }
         saveJSONArray(jsonCroisements, "data/croisements.json");
+      
+     // croisements Somme
+       JSONArray jsonCroisementsSomme = new JSONArray();
+        n=0;
+        for(CroisementSomme cs : croisementsSomme){
+          jsonCroisementsSomme.setJSONObject(n,cs.getJSON());
+          n++;
+        }
+        saveJSONArray(jsonCroisementsSomme, "data/croisementsSomme.json");
       break;
       
       case 'p' :
