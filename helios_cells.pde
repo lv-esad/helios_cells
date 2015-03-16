@@ -165,9 +165,9 @@ void draw(){
         saveFrame("Phase-de--rencontre//Helios-rencontre" + d + "-" + m + "-" + y + "-" + "à" + "-" + h + "h"+ min + "min" + ".jpg");
       break;
       
-      case 'u' :
+    //  case 'u' :
       // envoie les donnees via udp
-      new udpRequest();
+     // new udpRequest();
       break;
     }
   }

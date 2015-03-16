@@ -40,6 +40,7 @@ class CroisementSomme{
     c.dejaSomme = true;
     //println("add ",x,y,croisements.size());
   }
+
   
   JSONObject getJSON(){
     
@@ -51,4 +52,5 @@ class CroisementSomme{
     return json;
     
   }
-}
+  }
+
