@@ -31,6 +31,9 @@ void drawEditor(){
   background(255);
   image(plan,0,0,width,height);
   stroke(#ff0000);
+  
+  ////////////////////////////// Dessin de l'espace sur la grille //////////////////////
+  
   // base centrale
   line(0, 727, 1480, 727); // horizontale bas
   line(188, 955, 738, 00); // oblique gauche
@@ -42,6 +45,14 @@ void drawEditor(){
   line(0,950,550,0); //facade gauche
   // coin fumeur gauche
   line (560,0,1110,955); // facade droite
+  line (165,955,1150,420); // couloir gauche
+  line (285,955,1150,460); //couloir droite
+  // coin fumeur bas droite
+  line (0,890,1150,890); // facade avant
+  line (715,0,715,955); // couloir gauche
+  line (760,0,760,955); // couloir droite
+  
+  ///////////////////////////////////////////////////////////////////////////////////////
   
   stroke(0,30);
   strokeWeight(1);

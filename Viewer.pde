@@ -12,6 +12,11 @@ int PositionIteration(int x1, int y1) {
     float x = float(jsonCroisementSomme.getInt("x")); // convert int to String
     float y = float(jsonCroisementSomme.getInt("y")); // convert int to String
     int iteration = int(jsonCroisementSomme.getInt("i")); // convert int to String
+    int hauteur;
+    hauteur = iteration<2?1: iteration<5?2: iteration<9?3: iteration<15?4:5;
+   // println(hauteur);
+    
+    
     if ((x1 == x) && (y1==y)) {
      // println(x1,y1,x,y);
       return iteration;
@@ -25,13 +30,13 @@ int PositionIteration(int x1, int y1) {
   void drawViewer () {
     background(255);
     randomSeed(10);
-    camera    (GRID_SIZE*GRID_X/2, 0, 400+10*mouseX, 
+    camera    (GRID_SIZE*GRID_X/2, 0, 800, 
     GRID_SIZE*GRID_X/2, GRID_SIZE*GRID_Y/2, 0, 
     0.0, 1, 1.0);
     for (int i=0; i<=GRID_X; i++) {
       for (int j=0; j<=GRID_Y; j++) {
         for(int z=0; z<=5; z++) {
-        for  (int Niveau=0 ; Niveau<random(1,4)/*-PositionIteration(i, j)*/; Niveau++) {
+        for  (int Niveau=0 ; Niveau<PositionIteration(i, j); Niveau++) { //random(1,4)/*-
 
           pushMatrix();
           translate(i*GRID_SIZE, j*GRID_SIZE, Niveau*GRID_SIZE);
