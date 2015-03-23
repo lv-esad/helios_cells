@@ -15,6 +15,7 @@ void setupEditor(){
   plan = loadImage("plan.png");
   GRID_Y = GRID_X*plan.height/plan.width;
   size(GRID_SIZE*GRID_X+1,GRID_SIZE*GRID_Y+1);
+
   
 }
 
@@ -29,6 +30,19 @@ void drawEditor(){
   // dessine la grille
   background(255);
   image(plan,0,0,width,height);
+  stroke(#ff0000);
+  // base centrale
+  line(0, 727, 1480, 727); // horizontale bas
+  line(188, 955, 738, 00); // oblique gauche
+  line(238, 955, 788, 00); // deuxieme oblique gauche
+  line(365, 00, 927, 958); // oblique droite
+  // coin fumeur haut
+  line(98,0,1150,595); // oblique haut
+  line(15,0,1150,647); //oblique bas
+  line(0,950,550,0); //facade gauche
+  // coin fumeur gauche
+  line (560,0,1110,955); // facade droite
+  
   stroke(0,30);
   strokeWeight(1);
   for(int i=0; i<=width; i+=GRID_SIZE){

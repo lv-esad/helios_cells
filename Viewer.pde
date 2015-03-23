@@ -25,7 +25,7 @@ int PositionIteration(int x1, int y1) {
   void drawViewer () {
     background(255);
     randomSeed(10);
-    camera    (GRID_SIZE*GRID_X/2, 0, -100+10*mouseX, 
+    camera    (GRID_SIZE*GRID_X/2, 0, 400+10*mouseX, 
     GRID_SIZE*GRID_X/2, GRID_SIZE*GRID_Y/2, 0, 
     0.0, 1, 1.0);
     for (int i=0; i<=GRID_X; i++) {
