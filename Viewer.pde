@@ -1,8 +1,10 @@
 JSONArray jsonCroisementsSomme;
+PImage masque;
 
 void setupViewer () {
   size(GRID_SIZE*GRID_X+1, GRID_SIZE*GRID_Y+1, P3D);
   jsonCroisementsSomme = loadJSONArray("croisementsSomme.json");
+  masque = loadImage("plan3.png");
 }
 
 int PositionIteration(int x1, int y1) {
@@ -25,24 +27,31 @@ int PositionIteration(int x1, int y1) {
   }
   return 0;
 }
-
+ Boolean isNotMask (int x, int y) {
+ color pixel = masque.get(x,y);
+int i = pixel;
+ return i== 0;
+ }
 
   void drawViewer () {
     background(255);
+    
     randomSeed(10);
-    camera    (GRID_SIZE*GRID_X/2, 0, 800, 
+    camera    (GRID_SIZE*GRID_X/2, 0, -100, 
     GRID_SIZE*GRID_X/2, GRID_SIZE*GRID_Y/2, 0, 
     0.0, 1, 1.0);
     for (int i=0; i<=GRID_X; i++) {
       for (int j=0; j<=GRID_Y; j++) {
+        if (isNotMask (i,j)) {
         for(int z=0; z<=5; z++) {
-        for  (int Niveau=0 ; Niveau<PositionIteration(i, j); Niveau++) { //random(1,4)/*-
+        for  (int Niveau=0 ; Niveau<-PositionIteration(i, j); Niveau++) { //random(1,4)/*-
 
           pushMatrix();
           translate(i*GRID_SIZE, j*GRID_SIZE, Niveau*GRID_SIZE);
           box(GRID_SIZE);
           popMatrix();
         }
+      }
         }
       }
     }
