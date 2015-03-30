@@ -37,7 +37,24 @@ int i = pixel;
  return i== 0;
  }
 
+
   void drawViewer () {
+    
+     
+           if (keyPressed) {
+    switch(key) {
+              case 'p' :
+      // copie l'ecran dans un fichier
+      int d = day();    
+      int m = month();  
+      int y = year();     
+      int h = hour();  
+      int min = minute();  
+      saveFrame("Phase-de--rencontre//Helios-rencontre" + d + "-" + m + "-" + y + "-" + "à" + "-" + h + "h"+ min + "min" + ".jpg");
+      break;
+      
+    }
+  }
     background(255);
     
     randomSeed(10);
@@ -48,12 +65,16 @@ int i = pixel;
       for (int j=0; j<=GRID_Y; j++) {
         if (isNotMask (i,j)) {
         for(int z=0; z<=5; z++) {
-        for  (int Niveau=0 ; Niveau<5-PositionIteration(i, j); Niveau++) {
+        for  (int Niveau=0 ; Niveau<4-PositionIteration(i, j); Niveau++) {
 
           pushMatrix();
           translate(i*GRID_SIZE, j*GRID_SIZE, -Niveau*GRID_SIZE);
           box(GRID_SIZE);
           popMatrix();
+          
+
+      
+      
           
         }
       }

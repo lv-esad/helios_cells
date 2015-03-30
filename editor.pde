@@ -30,7 +30,7 @@ void drawEditor() {
   background(255);
 
   image(plan, 0, 0, width, height);
-  image(loadImage("plan3.png"), 0, 0);
+ // image(loadImage("plan3.png"), 0, 0);
   stroke(#ff0000);
 
   ////////////////////////////// Dessin de l'espace sur la grille //////////////////////
