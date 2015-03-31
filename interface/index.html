@@ -8,7 +8,10 @@
 	<script type="text/javascript">
 		$(function(){
 
-			var SERVER = 'localhost',
+			var map = $('#map');
+
+			// change with server IP address
+			var SERVER = '192.168.2.239',
 				CLIENT_NAME = 'interface',
 				CLIENT_DESCRIPTION = 'send touch position',
 				PORT = 9000;
@@ -34,11 +37,19 @@
 				spacebrewClient.send('sendPosition', 'string', JSON.stringify(position));
 			}
 
-			$('#map').on('mousemove',function(e){
+			map.on('mousemove',function(e){
 				SendPosition(e.offsetX, e.offsetY)
 			});
-			$('#map').on('touchmove',function(e){
-
+			$(document).on('touchmove',function(e){
+				var oEvent = e.originalEvent, touch = oEvent.touches[0], oX = map.offset().left, oY = map.offset().top,
+						x = touch.pageX - oX,
+						y = touch.pageY - oY;
+				if(x<0 || x> 320 || y<0 || y>320){
+					return false;
+				}
+				console.log(x,y);
+				SendPosition(x,y);
+				return false;
 			});
 		})
 	</script>
