@@ -4,8 +4,8 @@ int GRID_SIZE = 7;
 int GRID_X = 160;
 int GRID_Y = 140;
 
-//String RUN_TYPE= "Editor";
-String RUN_TYPE= "Viewer";
+String RUN_TYPE= "Editor";
+//String RUN_TYPE= "Viewer";
 
 
 void setup() {
