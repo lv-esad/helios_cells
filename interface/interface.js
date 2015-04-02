@@ -1,0 +1,157 @@
+$(function () {
+
+	// map jQuery wrapped
+	var map = $('#map');
+
+	//
+	// Spacebrew client options
+	// you need to change using your server IP address
+	var SERVER = '192.168.2.120',
+		CLIENT_NAME = 'interface',
+		CLIENT_DESCRIPTION = 'send touch position',
+		PORT = 9000; // default spacebrew port is 9000
+
+	// setup new Spacebrew client
+	var spacebrewClient = new Spacebrew.Client(SERVER, CLIENT_NAME, CLIENT_DESCRIPTION, PORT);
+
+	// publish and subscribe
+	spacebrewClient.addPublish('sendPosition', 'string', 'unknow position');
+	spacebrewClient.addSubscribe('sendPosition', 'string');
+	// toggle open when signal is opened
+	spacebrewClient.onOpen = function () {
+		$('body').addClass('open');
+	};
+	spacebrewClient.onClose = function () {
+		$('body').removeClass('open');
+	};
+
+	// connect Spacebrew
+	spacebrewClient.connect();
+
+	// Send a position
+	function SendPosition(x, y) {
+		var position = {
+			x: x,
+			y: y,
+			timestamp: Date.now()
+		};
+		spacebrewClient.send('sendPosition', 'string', JSON.stringify(position));
+	}
+
+	// mouse event
+	map.on('mousemove', function (e) {
+		SendPosition(e.offsetX, e.offsetY);
+		return false;
+	});
+
+	// touch event
+	$(document).on('touchmove', function (e) {
+		/*var oEvent = e.originalEvent, touch = oEvent.touches[0], oX = map.offset().left, oY = map.offset().top,
+			x = touch.pageX - oX,
+			y = touch.pageY - oY;
+		if (x < 0 || x > 320 || y < 0 || y > 320) {
+			return false;
+		}
+		SendPosition(x, y);
+		return false;*/
+		return false;
+	});
+
+	// Snap SVG
+
+	var paper = Snap('#map'),
+		GRID_SIZE = 5,
+		GRID_X = 160,
+		GRID_Y = 140,
+		PAPER_WIDTH = GRID_X* GRID_SIZE, // 800
+		PAPER_HEIGHT = GRID_Y* GRID_SIZE, // 700
+		scale = 1,
+		offset = {x:0,y:0},
+		portrait = false
+	;
+
+	// Bind Resize events
+	function Resize() {
+		portrait = paper.node.clientHeight / paper.node.clientWidth > GRID_Y / GRID_X;
+		scale = portrait ? paper.node.clientWidth / PAPER_WIDTH : paper.node.clientHeight / PAPER_HEIGHT;
+		offset.x = offset.y = 0;
+		if (portrait) {
+			offset.y = (paper.node.clientHeight - PAPER_HEIGHT * scale) / 2;
+		} else {
+			offset.x = (paper.node.clientWidth - PAPER_WIDTH * scale) / 2;
+		}
+		console.log(scale, portrait, offset);
+	}
+	$(window).resize(Resize);
+	Resize();
+
+
+
+	// Draw Grid
+	var gridOptions = {
+		stroke: '#000',
+		strokeOpacity: .1,
+		strokeWidth: 1
+	};
+	for(var x=0; x<=GRID_X; x++){
+		paper.line(x*GRID_SIZE,0,x*GRID_SIZE, PAPER_HEIGHT)
+			.attr(gridOptions);
+	}
+	for(var y=0; y<=GRID_Y; y++){
+		paper.line(0,y*GRID_SIZE,PAPER_WIDTH,y*GRID_SIZE)
+			.attr(gridOptions);
+	}
+
+	// blocks
+	var blocksWrapper = paper.group(), // define a group wrapper
+		handler = paper.rect(0,0,PAPER_WIDTH,PAPER_HEIGHT).attr({fill:'rgba(0,0,0,0)'});
+
+	//
+	function GlobalToLocal(position){
+		// convert viewport position to grid position
+		return {
+			x:Math.round((position.x/scale-offset.x)/GRID_SIZE),
+			y:Math.round((position.y/scale-offset.y)/GRID_SIZE)
+		}
+	}
+	//
+	function RandomColor(){
+		var randomColor = Math.floor(Math.random() * 16777215).toString(16);
+		while (randomColor.length < 6) {randomColor = '0' + randomColor}
+		return  '#' + randomColor;
+	}
+	//
+	var touchesID;
+	function GenerateTouchIdentification(){
+		touchesID = [];
+		for(var i=0; i<12; i++){ // 12 fingers !
+			touchesID[i] = RandomColor();
+		}
+	}
+	//
+	function AddPosition(point,touch){
+		// add position
+		var position = {
+			x:point.x,
+			y:point.y,
+			rect:paper.rect(point.x*GRID_SIZE,point.y*GRID_SIZE,GRID_SIZE,GRID_SIZE).attr({fill: touchesID[touch],opacity:.1})
+		}
+
+	}
+	//
+	//
+	paper.touchstart(function(e){
+		GenerateTouchIdentification();
+	});
+	//
+	paper.touchmove(function(e){
+		_(e.changedTouches).each(function(touch,key){
+			console.log(e);
+			var point = GlobalToLocal({x:touch.pageX,y:touch.pageY});
+			if(!(point.x<0 || point.y<0 || point.x>=GRID_X || point.y>=GRID_Y)){
+				AddPosition(point,key);
+			}
+		})
+	})
+
+});

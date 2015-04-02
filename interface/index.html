@@ -2,83 +2,33 @@
 <html>
 <head lang="en">
 	<meta charset="UTF-8">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="viewport" content="width = device-width, initial-scale = 1, user-scalable = no">
 	<title>iPad interface spacebrew helios cells </title>
+
+	<!-- jQuery -->
 	<script src="jquery-1.11.2.min.js" type="text/javascript"></script>
+	<!-- underscore -->
+	<script src="underscore-min.js" type="text/javascript"></script>
+	<!-- Snap.svg -->
+	<script src="snap.svg-min.js" type="text/javascript"></script>
+	<!-- Spacebrew -->
 	<script src="sb-1.4.1.min.js" type="text/javascript"></script>
-	<script type="text/javascript">
-		$(function(){
+	<!-- interface.js -->
+	<script src="interface.js" type="text/javascript"></script>
 
-			var map = $('#map');
+	<link rel="stylesheet" href="interface.css" />
 
-			// change with server IP address
-			var SERVER = '192.168.2.239',
-				CLIENT_NAME = 'interface',
-				CLIENT_DESCRIPTION = 'send touch position',
-				PORT = 9000;
-
-			var spacebrewClient = new Spacebrew.Client(SERVER,CLIENT_NAME, CLIENT_DESCRIPTION, PORT);
-
-			spacebrewClient.addPublish('sendPosition','string','unknow position');
-			spacebrewClient.addSubscribe('sendPosition','string');
-			spacebrewClient.onOpen = function(){
-				$('body').addClass('open');
-			};
-			spacebrewClient.onClose = function(){
-				$('body').removeClass('open');
-			};
-			spacebrewClient.connect();
-
-			function SendPosition(x,y){
-				var position = {
-					x: x,
-					y: y,
-					timestamp: Date.now()
-				};
-				spacebrewClient.send('sendPosition', 'string', JSON.stringify(position));
-			}
-
-			map.on('mousemove',function(e){
-				SendPosition(e.offsetX, e.offsetY)
-			});
-			$(document).on('touchmove',function(e){
-				var oEvent = e.originalEvent, touch = oEvent.touches[0], oX = map.offset().left, oY = map.offset().top,
-						x = touch.pageX - oX,
-						y = touch.pageY - oY;
-				if(x<0 || x> 320 || y<0 || y>320){
-					return false;
-				}
-				console.log(x,y);
-				SendPosition(x,y);
-				return false;
-			});
-		})
-	</script>
-	<style>
-		html,body{
-			background: darkorange;
-			height:100vh;
-			width:100vw;
-			padding: 0;
-			margin: 0;
-			overflow: hidden;
-		}
-		body.open{
-			background: #000;
-		}
-		#map{
-			background: #fff;
-			position:absolute;
-			top:0;
-			left:0;
-			bottom:0;
-			right:0;
-			margin: auto;
-		}
-	</style>
 </head>
-<body>
-<svg id="map" width="320" height="320">
 
+<body>
+
+<svg id="map" width="800" height="700" viewBox="0 0 800 700">
+	<defs>
+		<image id="localmap" xlink:href="../plan.png" width="3850px" height="3273px" />
+	</defs>
 </svg>
 </body>
+
 </html>
