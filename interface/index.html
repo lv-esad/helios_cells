@@ -24,11 +24,21 @@
 
 <body>
 
-<svg id="map" width="800" height="700" viewBox="0 0 800 700">
-	<defs>
-		<image id="localmap" xlink:href="../plan.png" width="3850px" height="3273px" />
-	</defs>
+<svg version="1.1"  id="map" width="800" height="700" viewBox="0 0 800 700" xmlns:xlink="http://www.w3.org/1999/xlink"  xml:space="preserve">
+	<pattern id="image" x="0" y="0" patternUnits="userSpaceOnUse" height="700" width="800">
+      <image x="0" y="0" xlink:href="plan.png" height="700" width="800"></image>
+    </pattern>
+	<rect height="700" width="800" fill="url(#image)" />
 </svg>
+
+<div class="modal">
+	<button class="close"></button>
+	<form class="server">
+		<input placeholder="SERVER" name="SERVER" id="SERVER" type="text"/>
+		<button type="submit">VALIDER</button>
+	</form>
+</div>
+
 </body>
 
 </html>

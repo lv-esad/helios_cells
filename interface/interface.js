@@ -6,27 +6,39 @@ $(function () {
 	//
 	// Spacebrew client options
 	// you need to change using your server IP address
-	var SERVER = '192.168.2.120',
+	var spacebrewClient,
+		SERVER = '172.20.10.3',
 		CLIENT_NAME = 'interface',
 		CLIENT_DESCRIPTION = 'send touch position',
 		PORT = 9000; // default spacebrew port is 9000
 
 	// setup new Spacebrew client
-	var spacebrewClient = new Spacebrew.Client(SERVER, CLIENT_NAME, CLIENT_DESCRIPTION, PORT);
-
-	// publish and subscribe
-	spacebrewClient.addPublish('sendPosition', 'string', 'unknow position');
-	spacebrewClient.addSubscribe('sendPosition', 'string');
-	// toggle open when signal is opened
-	spacebrewClient.onOpen = function () {
-		$('body').addClass('open');
-	};
-	spacebrewClient.onClose = function () {
+	function SetupSpacebrew(){
 		$('body').removeClass('open');
-	};
 
-	// connect Spacebrew
-	spacebrewClient.connect();
+		if(!_.isUndefined(spacebrewClient)){
+			spacebrewClient.close();
+		}
+
+		spacebrewClient = new Spacebrew.Client(SERVER, CLIENT_NAME, CLIENT_DESCRIPTION, PORT);
+
+		// publish and subscribe
+		spacebrewClient.addPublish('sendPosition', 'string', 'unknow position');
+		spacebrewClient.addSubscribe('sendPosition', 'string');
+		// toggle open when signal is opened
+		spacebrewClient.onOpen = function () {
+			$('#SERVER').val(SERVER);
+			$('body').addClass('open');
+		};
+		spacebrewClient.onClose = function () {
+			$('body').removeClass('open');
+		};
+
+		// connect Spacebrew
+		spacebrewClient.connect();
+	}
+
+	SetupSpacebrew();
 
 	// Send a position
 	function SendPosition(x, y) {
@@ -84,6 +96,7 @@ $(function () {
 	}
 	$(window).resize(Resize);
 	Resize();
+	setTimeout(Resize,100);
 
 
 
@@ -93,14 +106,14 @@ $(function () {
 		strokeOpacity: .1,
 		strokeWidth: 1
 	};
-	for(var x=0; x<=GRID_X; x++){
+	/*for(var x=0; x<=GRID_X; x++){
 		paper.line(x*GRID_SIZE,0,x*GRID_SIZE, PAPER_HEIGHT)
 			.attr(gridOptions);
 	}
 	for(var y=0; y<=GRID_Y; y++){
 		paper.line(0,y*GRID_SIZE,PAPER_WIDTH,y*GRID_SIZE)
 			.attr(gridOptions);
-	}
+	}*/
 
 	// blocks
 	var blocksWrapper = paper.group(), // define a group wrapper
@@ -121,11 +134,12 @@ $(function () {
 		return  '#' + randomColor;
 	}
 	//
-	var touchesID;
+	var touchesID, touchUID;
 	function GenerateTouchIdentification(){
 		touchesID = [];
 		for(var i=0; i<12; i++){ // 12 fingers !
-			touchesID[i] = RandomColor();
+			touchesID[i] = {color:RandomColor(),uid:touchUID};
+			touchUID ++;
 		}
 	}
 	//
@@ -134,9 +148,9 @@ $(function () {
 		var position = {
 			x:point.x,
 			y:point.y,
-			rect:paper.rect(point.x*GRID_SIZE,point.y*GRID_SIZE,GRID_SIZE,GRID_SIZE).attr({fill: touchesID[touch],opacity:.1})
-		}
-
+			rect:paper.rect(point.x*GRID_SIZE,point.y*GRID_SIZE,GRID_SIZE,GRID_SIZE).attr({fill: touchesID[touch].color,opacity:.1})
+		};
+		SendPosition(position.x, position.y, touch.uid);
 	}
 	//
 	//
@@ -152,6 +166,30 @@ $(function () {
 				AddPosition(point,key);
 			}
 		})
+	});
+
+	var emergency = paper.rect(-100,0,100,100).attr({fill:'transparent'}), emergencyTouch = 0,
+		emergencyTimeout;
+	emergency.touchstart(function(){
+		emergencyTouch++;
+		clearTimeout(emergencyTimeout);
+		if(emergencyTouch==10){
+			$('.modal').fadeIn();
+		}
+		emergencyTimeout = setTimeout(function () {
+			emergencyTouch = 0
+		}, 1000);
+	});
+
+	function CloseModal(){
+		$('.modal').fadeOut();
+	}
+	$('.modal .close').click(CloseModal);
+	$('form.server').submit(function(){
+		CloseModal();
+		SERVER = $('#SERVER').val();
+		SetupSpacebrew();
+		return false;
 	})
 
 });
