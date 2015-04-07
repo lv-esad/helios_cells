@@ -42,12 +42,13 @@ class PositionSomme {
 
 
   PositionSomme (Position p) {  
-    positions.add(p);
+    this.ajoutePosition(p);
     x=p.x;
     y=p.y;
   }
   Boolean userExist(Position p) {
     for (Position pTest : positions) {
+          //println(p.user==pTest.user);
       if (p.user==pTest.user) {
         return true;
       }

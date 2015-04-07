@@ -27,31 +27,29 @@ void ResetInterface(){
 }
 
 void onStringMessage( String name, String value ) {
-    println("position_"+name+"_");
-    println(name.length());
-  if(name=="position"){
-    JSONObject json = JSONObject.parse(value);
-    json.parse(value);
-    println(json);
-    
-    /* */
-  // debug raw message
+   
+  JSONObject json = JSONObject.parse(value);
+  long timestamp = json.getInt("timestamp");
+  
+  if(timestamp!=0){
+
+  int x = json.getInt("x");
+  int y = json.getInt("y");
   String colorString = split(json.getString("color"),"#")[1];
   int colorInt = unhex(colorString);
   color c = color(red(colorInt),green(colorInt),blue(colorInt),255/10);
+  int uid = json.getInt("uid");
+  int ts = json.getInt("timestamp");
+  
+    /* * /
+  // debug raw message
   fill(c);
   noStroke();
-  rect(json.getInt("x")*GRID_SIZE, json.getInt("y")*GRID_SIZE, GRID_SIZE, GRID_SIZE);
+  rect(x*GRID_SIZE, y*GRID_SIZE, GRID_SIZE, GRID_SIZE);
   
   //*/
+  AddPosition(x,y,c,uid,ts);
   
-  }
-  if(name=="message"){
-    println(value);
-  }
+ }
   
-
-
-  
-
 }

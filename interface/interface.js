@@ -7,10 +7,11 @@ $(function () {
 	// Spacebrew client options
 	// you need to change using your server IP address
 	var spacebrewClient,
-		SERVER = '172.20.10.3',
+		SERVER = '192.168.2.124',
 		CLIENT_NAME = 'interface',
 		CLIENT_DESCRIPTION = 'send touch position',
 		PORT = 9000,
+		DATE_OFFSET = (new Date('2015-04-01')).getTime(),
 		SESSION_ID = Date.now(); // default spacebrew port is 9000
 
 	// setup new Spacebrew client
@@ -53,7 +54,7 @@ $(function () {
 			y: y,
 			color: color,
 			uid: uid,
-			timestamp: Date.now()
+			timestamp: Date.now()- DATE_OFFSET
 		};
 		spacebrewClient.send('position', 'string', JSON.stringify(position));
 	}
