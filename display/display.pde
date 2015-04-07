@@ -32,9 +32,10 @@ void keyPressed() {
   switch(keyCode) {
   case 67 : // C -> CLEAN
     CleanInterface();
+    CleanDisplay();
     break;
   default:
-  println(keyCode);
+  //println(keyCode);
   }
 }
 
@@ -69,6 +70,12 @@ void Display() {
       }
     }
   }
+}
+
+void CleanDisplay(){
+  positions = new ArrayList<Position>();
+  positionsSomme = new ArrayList<PositionSomme>();
+ 
 }
 
 
