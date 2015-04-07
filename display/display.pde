@@ -30,9 +30,11 @@ Boolean isNotMask (int x, int y) {
 
 void keyPressed() {
   switch(keyCode) {
-  case 82 : // R
-    ResetInterface();    
+  case 67 : // C -> CLEAN
+    CleanInterface();
+    break;
   default:
+  println(keyCode);
   }
 }
 
@@ -41,6 +43,7 @@ void draw() {
     Display();
   }
 }
+
 void Display() {
   background(255);
   /*for(PositionSomme ps : positionsSomme){

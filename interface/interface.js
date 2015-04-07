@@ -11,7 +11,7 @@ $(function () {
 		CLIENT_NAME = 'interface',
 		CLIENT_DESCRIPTION = 'send touch position',
 		PORT = 9000,
-		DATE_OFFSET = (new Date('2015-04-01')).getTime(),
+		DATE_OFFSET = (new Date('2015-04-01')).getTime(), // date offset (to prevent long int problems)
 		SESSION_ID = Date.now(); // default spacebrew port is 9000
 
 	// setup new Spacebrew client
@@ -36,10 +36,13 @@ $(function () {
 		spacebrewClient.onClose = function () {
 			$('body').removeClass('open');
 		};
-		spacebrewClient.onStringMessage(function(e,t){
-			alert(t);
-			spacebrewClient.send('message','string',t);
-		});
+		spacebrewClient.onStringMessage = function(type,value){
+			//alert(t);
+			switch(value){
+				case "clean":
+					Clean();
+			}
+		};
 
 		// connect Spacebrew
 		spacebrewClient.connect();
@@ -92,7 +95,6 @@ $(function () {
 		} else {
 			offset.x = (paper.node.clientWidth - PAPER_WIDTH * scale) / 2;
 		}
-		console.log(scale, portrait, offset);
 	}
 	$(window).resize(Resize);
 	Resize();
@@ -148,7 +150,7 @@ $(function () {
 		var position = {
 			x:point.x,
 			y:point.y,
-			rect:paper.rect(point.x*GRID_SIZE,point.y*GRID_SIZE,GRID_SIZE,GRID_SIZE).attr({fill: touchesID[touch].color,opacity:.1})
+			rect: blocksWrapper.rect(point.x*GRID_SIZE,point.y*GRID_SIZE,GRID_SIZE,GRID_SIZE).attr({fill: touchesID[touch].color,opacity:.1})
 		};
 		SendPosition(position.x, position.y, touchesID[touch].uid, touchesID[touch].color);
 	}
@@ -167,6 +169,10 @@ $(function () {
 			}
 		})
 	});
+	//
+	function Clean(){
+		blocksWrapper.clear();
+	}
 
 	var emergency = paper.rect(-100,0,100,100).attr({fill:'transparent'}), emergencyTouch = 0,
 		emergencyTimeout;
@@ -184,11 +190,18 @@ $(function () {
 	function CloseModal(){
 		$('.modal').fadeOut();
 	}
+
+	$('.modal').fadeIn();
 	$('.modal .close').click(CloseModal);
 	$('form.server').submit(function(){
 		CloseModal();
 		SERVER = $('#SERVER').val();
 		SetupSpacebrew();
+		return false;
+	});
+	$('form.clean').submit(function(){
+		Clean();
+		CloseModal();
 		return false;
 	})
 

@@ -15,7 +15,7 @@ void setupSpacebrew(){
 
   // declare your subscribers
   sb.addSubscribe( "position", "string" );
-  sb.addSubscribe( "message", "string" );
+  //sb.addSubscribe( "message", "string" );
 
   // connect!
   sb.connect(server, name, description );
@@ -52,4 +52,9 @@ void onStringMessage( String name, String value ) {
   
  }
   
+}
+
+void CleanInterface(){
+    println("clean interface");
+    sb.send("command","clean"); 
 }
