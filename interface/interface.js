@@ -10,7 +10,8 @@ $(function () {
 		SERVER = '172.20.10.3',
 		CLIENT_NAME = 'interface',
 		CLIENT_DESCRIPTION = 'send touch position',
-		PORT = 9000; // default spacebrew port is 9000
+		PORT = 9000,
+		SESSION_ID = Date.now(); // default spacebrew port is 9000
 
 	// setup new Spacebrew client
 	function SetupSpacebrew(){
@@ -23,8 +24,9 @@ $(function () {
 		spacebrewClient = new Spacebrew.Client(SERVER, CLIENT_NAME, CLIENT_DESCRIPTION, PORT);
 
 		// publish and subscribe
-		spacebrewClient.addPublish('sendPosition', 'string', 'unknow position');
-		spacebrewClient.addSubscribe('sendPosition', 'string');
+		spacebrewClient.addPublish('position', 'string', 'unknow position');
+		spacebrewClient.addPublish('message', 'string', 'unknow message');
+		spacebrewClient.addSubscribe('command', 'string');
 		// toggle open when signal is opened
 		spacebrewClient.onOpen = function () {
 			$('#SERVER').val(SERVER);
@@ -33,6 +35,10 @@ $(function () {
 		spacebrewClient.onClose = function () {
 			$('body').removeClass('open');
 		};
+		spacebrewClient.onStringMessage(function(e,t){
+			alert(t);
+			spacebrewClient.send('message','string',t);
+		});
 
 		// connect Spacebrew
 		spacebrewClient.connect();
@@ -41,31 +47,24 @@ $(function () {
 	SetupSpacebrew();
 
 	// Send a position
-	function SendPosition(x, y) {
+	function SendPosition(x, y, uid, color) {
 		var position = {
 			x: x,
 			y: y,
+			color: color,
+			uid: uid,
 			timestamp: Date.now()
 		};
-		spacebrewClient.send('sendPosition', 'string', JSON.stringify(position));
+		spacebrewClient.send('position', 'string', JSON.stringify(position));
 	}
 
 	// mouse event
 	map.on('mousemove', function (e) {
-		SendPosition(e.offsetX, e.offsetY);
 		return false;
 	});
 
 	// touch event
 	$(document).on('touchmove', function (e) {
-		/*var oEvent = e.originalEvent, touch = oEvent.touches[0], oX = map.offset().left, oY = map.offset().top,
-			x = touch.pageX - oX,
-			y = touch.pageY - oY;
-		if (x < 0 || x > 320 || y < 0 || y > 320) {
-			return false;
-		}
-		SendPosition(x, y);
-		return false;*/
 		return false;
 	});
 
@@ -134,7 +133,7 @@ $(function () {
 		return  '#' + randomColor;
 	}
 	//
-	var touchesID, touchUID;
+	var touchesID, touchUID = 0;
 	function GenerateTouchIdentification(){
 		touchesID = [];
 		for(var i=0; i<12; i++){ // 12 fingers !
@@ -150,7 +149,7 @@ $(function () {
 			y:point.y,
 			rect:paper.rect(point.x*GRID_SIZE,point.y*GRID_SIZE,GRID_SIZE,GRID_SIZE).attr({fill: touchesID[touch].color,opacity:.1})
 		};
-		SendPosition(position.x, position.y, touch.uid);
+		SendPosition(position.x, position.y, touchesID[touch].uid, touchesID[touch].color);
 	}
 	//
 	//
