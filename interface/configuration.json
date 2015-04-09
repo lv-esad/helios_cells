@@ -1,0 +1,7 @@
+{
+	"SERVER":"192.168.2.126",
+	"PORT": 9000,
+	"CLIENT_NAME":"interface",
+	"CLIENT_DESCRIPTION": "send touch position",
+	"DATE_OFFSET":"2015-04-01"
+}

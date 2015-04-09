@@ -7,11 +7,13 @@ $(function () {
 	// Spacebrew client options
 	// you need to change using your server IP address
 	var spacebrewClient,
-		SERVER = '192.168.2.124',
-		CLIENT_NAME = 'interface',
-		CLIENT_DESCRIPTION = 'send touch position',
-		PORT = 9000,
-		DATE_OFFSET = (new Date('2015-04-01')).getTime(), // date offset (to prevent long int problems)
+		spConfig = {
+			SERVER : 'localhost',
+			CLIENT_NAME : 'interface',
+			CLIENT_DESCRIPTION : 'send touch position',
+			PORT : 9000
+		},
+		//DATE_OFFSET = (new Date()).getTime(), // date offset (to prevent long int problems)
 		SESSION_ID = Date.now(); // default spacebrew port is 9000
 
 	// setup new Spacebrew client
@@ -22,7 +24,7 @@ $(function () {
 			spacebrewClient.close();
 		}
 
-		spacebrewClient = new Spacebrew.Client(SERVER, CLIENT_NAME, CLIENT_DESCRIPTION, PORT);
+		spacebrewClient = new Spacebrew.Client(spConfig.SERVER, spConfig.CLIENT_NAME, spConfig.CLIENT_DESCRIPTION, spConfig.PORT);
 
 		// publish and subscribe
 		spacebrewClient.addPublish('position', 'string', 'unknow position');
@@ -30,7 +32,7 @@ $(function () {
 		spacebrewClient.addSubscribe('command', 'string');
 		// toggle open when signal is opened
 		spacebrewClient.onOpen = function () {
-			$('#SERVER').val(SERVER);
+			$('#SERVER').val(spConfig.SERVER);
 			$('body').addClass('open');
 		};
 		spacebrewClient.onClose = function () {
@@ -48,7 +50,11 @@ $(function () {
 		spacebrewClient.connect();
 	}
 
-	SetupSpacebrew();
+	$.ajax({url:'configuration.json',dataType:'json'}).done(function(data){
+		spConfig = data;
+		SetupSpacebrew();
+		console.log(data)
+	});
 
 	// Send a position
 	function SendPosition(x, y, uid, color) {
