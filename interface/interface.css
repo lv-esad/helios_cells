@@ -81,4 +81,7 @@ button, input {
       content: '✕';
       font-family: Arial;
       display: block; }
+
+.mask {
+  display: none; }
 /*# sourceMappingURL=interface.css.map */

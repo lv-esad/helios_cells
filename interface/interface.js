@@ -13,6 +13,7 @@ $(function () {
 			CLIENT_DESCRIPTION : 'send touch position',
 			PORT : 9000
 		},
+		maskData = _([]),
 		DATE_OFFSET = 0, // date offset (to prevent long int problems)
 		SESSION_ID = Date.now(); // default spacebrew port is 9000
 
@@ -50,7 +51,36 @@ $(function () {
 		spacebrewClient.connect();
 	}
 
+	//
+	function ComputeMask(){
+		var maskImage = $('img.mask').get(0),
+			maskCanvas = $('canvas.mask').get(0),
+			maskContext = maskCanvas.getContext('2d');
+		maskContext.drawImage(maskImage,0,0,maskImage.width,maskImage.height);
+		var pixels = maskContext.getImageData(0,0, maskImage.width, maskImage.height),
+			THRESHOLD = 10;
+		for(var i=0; i< pixels.data.length; i+=4){
+			// 4 because using only RED channel to test
+			if(pixels.data[i]> THRESHOLD){
+				var n = i / 4,
+					x = n % pixels.width,
+					y = Math.floor(n / pixels.width);
+				maskData.push({
+					x:x,
+					y:y
+				})
+			}
+		}
+		}
+	function ValidMask(x,y){
+		return maskData.find({x:x,y:y}) != undefined;
+	}
+
 	$.ajax({url:'configuration.json',dataType:'json'}).done(function(data){
+		// load JSON configuration
+		//
+		ComputeMask();
+		//
 		sbConfig = data;
 		DATE_OFFSET = (new Date(sbConfig.DATE_OFFSET)).getTime();
 		SetupSpacebrew();
@@ -152,6 +182,10 @@ $(function () {
 	}
 	//
 	function AddPosition(point,touch){
+		// check if point is not masked
+		if (!ValidMask(point.x,point.y)) {
+			return;
+		}
 		// add position
 		var position = {
 			x:point.x,
@@ -168,7 +202,6 @@ $(function () {
 	//
 	paper.touchmove(function(e){
 		_(e.changedTouches).each(function(touch,key){
-			console.log(e);
 			var point = GlobalToLocal({x:touch.pageX,y:touch.pageY});
 			if(!(point.x<0 || point.y<0 || point.x>=GRID_X || point.y>=GRID_Y)){
 				AddPosition(point,key);
