@@ -71,9 +71,10 @@ $(function () {
 				})
 			}else{
 				// display mask
-				//paper.rect(x * GRID_SIZE, y* GRID_SIZE, GRID_SIZE, GRID_SIZE).attr({fill:'#000',opacity:.5});
+				displayMask.rect(x * GRID_SIZE, y* GRID_SIZE, GRID_SIZE, GRID_SIZE).attr({fill:'#000',opacity:.5});
 			}
 		}
+		displayMask.remove();
 	}
 	function ValidMask(x,y){
 		return maskData.find({x:x,y:y}) != undefined;
@@ -148,7 +149,8 @@ $(function () {
 
 	// blocks
 	var blocksWrapper = paper.group(), // define a group wrapper
-		handler = paper.rect(0,0,PAPER_WIDTH,PAPER_HEIGHT).attr({fill:'rgba(0,0,0,0)'});
+		handler = paper.rect(0,0,PAPER_WIDTH,PAPER_HEIGHT).attr({fill:'rgba(0,0,0,0)'}),
+		displayMask = paper.group();
 
 	//
 	function GlobalToLocal(position){
@@ -237,6 +239,10 @@ $(function () {
 	$('form.clean').submit(function(){
 		Clean();
 		CloseModal();
+		return false;
+	});
+	$('form.displayMask').submit(function(){
+		paper.append(displayMask);
 		return false;
 	});
 
