@@ -3,9 +3,9 @@ Helios Cells
 
 Projet réalisé en partenariat avec le centre de recherche LVMH. 
 
-![Helios rencontre](demo-3d)
+![Helios rencontre](demo-3d.jpg)
 
-![Helios rencontre](demo-2d)
+![Helios rencontre](demo-2d.jpg)
 
 Interface de contrôle 
 ---
