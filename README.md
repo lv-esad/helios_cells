@@ -2,7 +2,10 @@ Helios Cells
 ===
 
 Projet réalisé en partenariat avec le centre de recherche LVMH. 
-![Helios rencontre](Phase-de--rencontre/Helios-rencontre30-3-2015-à-14h56min.jpg)
+
+![Helios rencontre](demo-3d)
+
+![Helios rencontre](demo-2d)
 
 Interface de contrôle 
 ---
