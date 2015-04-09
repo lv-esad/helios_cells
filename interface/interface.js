@@ -61,30 +61,23 @@ $(function () {
 		var pixels = maskContext.getImageData(0,0, maskImage.width, maskImage.height);
 		for(var i=0; i< pixels.data.length; i+=4){
 			// 4 because using only RED channel to test
+			var n = i / 4,
+				x = n % pixels.width,
+				y = Math.floor(n / pixels.width);
 			if(pixels.data[i]> MASK_THRESHOLD){
-				var n = i / 4,
-					x = n % pixels.width,
-					y = Math.floor(n / pixels.width);
 				maskData.push({
 					x:x,
 					y:y
 				})
+			}else{
+				// display mask
+				//paper.rect(x * GRID_SIZE, y* GRID_SIZE, GRID_SIZE, GRID_SIZE).attr({fill:'#000',opacity:.5});
 			}
 		}
-		}
+	}
 	function ValidMask(x,y){
 		return maskData.find({x:x,y:y}) != undefined;
 	}
-
-	$.ajax({url:'configuration.json',dataType:'json'}).done(function(data){
-		// load JSON configuration
-		//
-		ComputeMask();
-		//
-		sbConfig = data;
-		DATE_OFFSET = (new Date(sbConfig.DATE_OFFSET)).getTime();
-		SetupSpacebrew();
-	});
 
 	// Send a position
 	function SendPosition(x, y, uid, color) {
@@ -245,6 +238,17 @@ $(function () {
 		Clean();
 		CloseModal();
 		return false;
-	})
+	});
+
+	//
+	$.ajax({url: 'configuration.json', dataType: 'json'}).done(function (data) {
+		// load JSON configuration
+		//
+		ComputeMask();
+		//
+		sbConfig = data;
+		DATE_OFFSET = (new Date(sbConfig.DATE_OFFSET)).getTime();
+		SetupSpacebrew();
+	});
 
 });
