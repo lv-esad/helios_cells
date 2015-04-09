@@ -13,6 +13,7 @@ $(function () {
 			CLIENT_DESCRIPTION : 'send touch position',
 			PORT : 9000
 		},
+		MASK_THRESHOLD = 1,
 		maskData = _([]),
 		DATE_OFFSET = 0, // date offset (to prevent long int problems)
 		SESSION_ID = Date.now(); // default spacebrew port is 9000
@@ -57,11 +58,10 @@ $(function () {
 			maskCanvas = $('canvas.mask').get(0),
 			maskContext = maskCanvas.getContext('2d');
 		maskContext.drawImage(maskImage,0,0,maskImage.width,maskImage.height);
-		var pixels = maskContext.getImageData(0,0, maskImage.width, maskImage.height),
-			THRESHOLD = 10;
+		var pixels = maskContext.getImageData(0,0, maskImage.width, maskImage.height);
 		for(var i=0; i< pixels.data.length; i+=4){
 			// 4 because using only RED channel to test
-			if(pixels.data[i]> THRESHOLD){
+			if(pixels.data[i]> MASK_THRESHOLD){
 				var n = i / 4,
 					x = n % pixels.width,
 					y = Math.floor(n / pixels.width);

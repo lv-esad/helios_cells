@@ -8,6 +8,8 @@ application.windows32
 application.windows64
 application.macosx
 
+interfaces/configuration.json
+
 # ignore directory
 Plug-in Rhino
 Recherches
