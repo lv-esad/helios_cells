@@ -7,13 +7,13 @@ $(function () {
 	// Spacebrew client options
 	// you need to change using your server IP address
 	var spacebrewClient,
-		spConfig = {
+		sbConfig = {
 			SERVER : 'localhost',
 			CLIENT_NAME : 'interface',
 			CLIENT_DESCRIPTION : 'send touch position',
 			PORT : 9000
 		},
-		//DATE_OFFSET = (new Date()).getTime(), // date offset (to prevent long int problems)
+		DATE_OFFSET = 0, // date offset (to prevent long int problems)
 		SESSION_ID = Date.now(); // default spacebrew port is 9000
 
 	// setup new Spacebrew client
@@ -24,7 +24,7 @@ $(function () {
 			spacebrewClient.close();
 		}
 
-		spacebrewClient = new Spacebrew.Client(spConfig.SERVER, spConfig.CLIENT_NAME, spConfig.CLIENT_DESCRIPTION, spConfig.PORT);
+		spacebrewClient = new Spacebrew.Client(sbConfig.SERVER, sbConfig.CLIENT_NAME, sbConfig.CLIENT_DESCRIPTION, sbConfig.PORT);
 
 		// publish and subscribe
 		spacebrewClient.addPublish('position', 'string', 'unknow position');
@@ -32,7 +32,7 @@ $(function () {
 		spacebrewClient.addSubscribe('command', 'string');
 		// toggle open when signal is opened
 		spacebrewClient.onOpen = function () {
-			$('#SERVER').val(spConfig.SERVER);
+			$('#SERVER').val(sbConfig.SERVER);
 			$('body').addClass('open');
 		};
 		spacebrewClient.onClose = function () {
@@ -51,9 +51,9 @@ $(function () {
 	}
 
 	$.ajax({url:'configuration.json',dataType:'json'}).done(function(data){
-		spConfig = data;
+		sbConfig = data;
+		DATE_OFFSET = (new Date(sbConfig.DATE_OFFSET)).getTime();
 		SetupSpacebrew();
-		console.log(data)
 	});
 
 	// Send a position
@@ -186,7 +186,7 @@ $(function () {
 		emergencyTouch++;
 		clearTimeout(emergencyTimeout);
 		if(emergencyTouch==10){
-			$('.modal').fadeIn();
+			OpenModal()
 		}
 		emergencyTimeout = setTimeout(function () {
 			emergencyTouch = 0
@@ -196,12 +196,15 @@ $(function () {
 	function CloseModal(){
 		$('.modal').fadeOut();
 	}
+	function OpenModal(){
+		$('#SERVER').val(sbConfig.SERVER);
+		$('.modal').fadeIn();
+	}
 
-	$('.modal').fadeIn();
 	$('.modal .close').click(CloseModal);
 	$('form.server').submit(function(){
 		CloseModal();
-		SERVER = $('#SERVER').val();
+		sbConfig.SERVER = $('#SERVER').val();
 		SetupSpacebrew();
 		return false;
 	});
